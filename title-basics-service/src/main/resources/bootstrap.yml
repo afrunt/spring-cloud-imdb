@@ -1,0 +1,18 @@
+spring:
+  data:
+    elasticsearch:
+      cluster-nodes: localhost:9300
+
+  application:
+    name: "title-basics-service"
+
+  cloud:
+    kubernetes:
+      enabled: false
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8000/eureka
+    registry-fetch-interval-seconds: 3
+    instance-info-replication-interval-seconds: 3

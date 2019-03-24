@@ -1,0 +1,56 @@
+version: "3"
+services:
+
+  eureka-service:
+    image: afrunt/spring-cloud-imdb-eureka-service
+    ports:
+      - 8000:8000
+    volumes:
+      - ./compose-config/eureka:/deployment/config
+
+  title-basics-service:
+    image: afrunt/spring-cloud-imdb-title-basics-service
+    volumes:
+      - ./compose-config/title-basics-service:/deployment/config
+    ports:
+      - 8181:8181
+    depends_on:
+      - eureka-service
+
+  title-basics-service-2:
+    image: afrunt/spring-cloud-imdb-title-basics-service
+    environment:
+      - "JAVA_OPTIONS=-Dserver.port=8282"
+    volumes:
+      - ./compose-config/title-basics-service:/deployment/config
+    ports:
+      - 8282:8282
+    depends_on:
+      - eureka-service
+
+  crawler-service:
+    image: afrunt/spring-cloud-imdb-data-crawler
+    volumes:
+      - ./compose-config/crawler-service:/deployment/config
+    ports:
+      - 8585:8585
+    depends_on:
+      - eureka-service
+      - title-basics-service
+
+  web:
+    image: afrunt/spring-cloud-imdb-web
+    volumes:
+      - ./compose-config/web:/deployment/config
+    ports:
+      - 8080:8080
+    depends_on:
+      - eureka-service
+      - title-basics-service
+
+
+
+
+
+
+

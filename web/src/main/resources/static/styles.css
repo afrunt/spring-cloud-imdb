@@ -1,0 +1,36 @@
+.header {
+    text-align: center;
+}
+
+.logo {
+    max-width: 150px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.menu {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+.error {
+    text-align: center;
+}
+
+.title_list_card {
+    margin-bottom: 5px;
+}
+
+.no-results {
+    text-align: center;
+}
+
+.search-stats {
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="header_content(title)">
+    <meta charset="UTF-8">
+    <th:block th:replace="~{fragments :: styles}"></th:block>
+    <th:block th:replace="~{fragments :: scripts}"></th:block>
+    <title th:text="${title}"></title>
+</th:block>
+
+
+<th:block th:fragment="genres_sidebar">
+    <div class="list-group">
+        <a th:each="kv : ${genresWithTitles}" href="#" class="list-group-item list-group-item-action">
+            <th:block th:text="${kv.key}"/>
+            <span class="badge badge-secondary" th:text="${kv.value}"></span>
+        </a>
+    </div>
+</th:block>
+
+
+<th:block th:fragment="error">
+    <div class="error">
+        <h2 th:text="${errorMessage == null} ? ${'Oops! Something goes wrong. Try again later'} : ${errorMessage}"></h2>
+    </div>
+</th:block>
+
+
+<th:block th:fragment="title">
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">
+                <th:block th:replace="~{ title-fragments :: title_name(${title})}"/>
+            </h5>
+            <p class="card-text">
+                <th:block th:replace="~{title-fragments :: title_brief(${title})}" />
+            </p>
+
+            <!--<a target="_blank" th:href="@{https://www.imdb.com/title/tt{titleId}(titleId=${title.titleId})}" class="btn btn-primary">View On IMDb</a>-->
+        </div>
+    </div>
+
+</th:block>
+
+<th:block th:fragment="search_titles_list">
+    <th:block th:replace="~{fragments :: search_titles_list}"/>
+</th:block>
+
+<th:block th:fragment="index">
+    <th:block th:replace="~{fragments :: search_form}"/>
+</th:block>
+
+</body>
+</html>

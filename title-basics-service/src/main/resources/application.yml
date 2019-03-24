@@ -1,0 +1,38 @@
+spring:
+  jackson:
+    serialization:
+      indent_output: true
+
+
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+server:
+  port: 8181
+
+logging:
+  level:
+    root: info
+
+feign:
+  hystrix:
+    enabled: true
+
+  client:
+    config:
+      default:
+        connectTimeout: 60000
+        readTimeout: 60000

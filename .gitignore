@@ -1,0 +1,8 @@
+*.iml
+/title-basics-service/target/
+/spring-boot-web-dependencies/target/
+/eureka-service/target/
+/dto/target/
+/docker-images/target/
+/data/
+/.idea/
