@@ -2,7 +2,8 @@ package com.afrunt.scimdb.web.controllers;
 
 import com.afrunt.imdb.model.TitleBasics;
 import com.afrunt.scimdb.dto.PageResponse;
-import com.afrunt.scimdb.dto.titlebasics.SearchRequest;
+import com.afrunt.scimdb.dto.titlebasics.TitleBasicsSearchRequest;
+import com.afrunt.scimdb.web.clients.CrawlerServiceClient;
 import com.afrunt.scimdb.web.clients.TitleBasicsServiceClient;
 import com.afrunt.scimdb.web.exception.TitleNotFoundException;
 import ma.glasnost.orika.MapperFacade;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.util.Map.entry;
 
@@ -31,6 +33,9 @@ public class WebController {
 
     @Autowired
     private TitleBasicsServiceClient titleBasicsServiceClient;
+
+    @Autowired
+    private CrawlerServiceClient crawlerServiceClient;
 
     @Autowired
     private MapperFacade mapperFacade;
@@ -52,7 +57,7 @@ public class WebController {
         StopWatch sw = new StopWatch();
         sw.start();
 
-        PageResponse<TitleBasics> pageResponse = titleBasicsServiceClient.search(new SearchRequest()
+        PageResponse<TitleBasics> pageResponse = titleBasicsServiceClient.search(new TitleBasicsSearchRequest()
                 .setTerm(term)
                 .setGenres(StringUtils.isEmpty(genre) || "any".equalsIgnoreCase(genre) ? Collections.emptyList() : Collections.singletonList(genre))
                 .setStartYear(startYear)
@@ -98,6 +103,30 @@ public class WebController {
             model.addAttribute("title", title.getBody());
             return "title";
         }
+    }
+
+    @PostMapping("/startCrawling")
+    public String startCrawling() {
+        crawlerServiceClient.start();
+        return "redirect:/sys-info";
+    }
+
+    @PostMapping("/stopCrawling")
+    public String stopCrawling() {
+        crawlerServiceClient.stop();
+        return "redirect:/sys-info";
+    }
+
+    @GetMapping("/sys-info")
+    public String systemInformation(Model model) {
+        model.addAttribute("stats",
+                Map.ofEntries(
+                        entry("Title Basics", Objects.requireNonNull(titleBasicsServiceClient.stats().getBody())),
+                        entry("Crawler", Objects.requireNonNull(crawlerServiceClient.stats().getBody()))
+                )
+        );
+
+        return "sys-info";
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)

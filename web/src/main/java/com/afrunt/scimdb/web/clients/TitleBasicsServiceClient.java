@@ -2,7 +2,8 @@ package com.afrunt.scimdb.web.clients;
 
 import com.afrunt.imdb.model.TitleBasics;
 import com.afrunt.scimdb.dto.PageResponse;
-import com.afrunt.scimdb.dto.titlebasics.SearchRequest;
+import com.afrunt.scimdb.dto.titlebasics.TitleBasicsSearchRequest;
+import com.afrunt.scimdb.dto.titlebasics.TitleBasicsStatistics;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -28,5 +29,8 @@ public interface TitleBasicsServiceClient {
     ResponseEntity<TitleBasics> titleById(@PathVariable("id") Long id);
 
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<PageResponse<TitleBasics>> search(@RequestBody SearchRequest searchRequest);
+    ResponseEntity<PageResponse<TitleBasics>> search(@RequestBody TitleBasicsSearchRequest titleBasicsSearchRequest);
+
+    @GetMapping("/stats")
+    ResponseEntity<TitleBasicsStatistics> stats();
 }

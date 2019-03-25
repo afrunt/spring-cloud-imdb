@@ -1,7 +1,7 @@
 package com.afrunt.scimdb.titlebasics.service;
 
 import com.afrunt.imdb.model.TitleBasics;
-import com.afrunt.scimdb.dto.titlebasics.SearchRequest;
+import com.afrunt.scimdb.dto.titlebasics.TitleBasicsSearchRequest;
 import com.afrunt.scimdb.titlebasics.model.TitleBasicsES;
 import com.afrunt.scimdb.titlebasics.repository.TitleBasicsESRepository;
 import ma.glasnost.orika.MapperFacade;
@@ -47,26 +47,26 @@ public class TitleBasicsService {
     @Autowired
     ElasticsearchTemplate elasticsearchTemplate;
 
-    public Page<TitleBasics> search(SearchRequest searchRequest) {
+    public Page<TitleBasics> search(TitleBasicsSearchRequest titleBasicsSearchRequest) {
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
 
         builder.mustNot(QueryBuilders.matchPhraseQuery("titleType", "tvEpisode"));
 
-        if (!StringUtils.isEmpty(searchRequest.getTerm())) {
-            builder.must(matchSearchTerm(searchRequest.getTerm()));
+        if (!StringUtils.isEmpty(titleBasicsSearchRequest.getTerm())) {
+            builder.must(matchSearchTerm(titleBasicsSearchRequest.getTerm()));
         }
 
-        if (searchRequest.hasGenres()) {
-            builder.must(beOfGenre(searchRequest.getGenres().get(0)));
+        if (titleBasicsSearchRequest.hasGenres()) {
+            builder.must(beOfGenre(titleBasicsSearchRequest.getGenres().get(0)));
         }
 
-        if (searchRequest.getStartYear() != null) {
-            builder.must(beOfYear(searchRequest.getStartYear()));
+        if (titleBasicsSearchRequest.getStartYear() != null) {
+            builder.must(beOfYear(titleBasicsSearchRequest.getStartYear()));
         }
 
         PageRequest pageRequest = PageRequest.of(
-                searchRequest.getPage(),
-                searchRequest.getPerPage(),
+                titleBasicsSearchRequest.getPage(),
+                titleBasicsSearchRequest.getPerPage(),
                 Sort.by(Sort.Order.desc("startYear").nullsLast())
         );
 

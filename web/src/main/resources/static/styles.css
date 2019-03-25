@@ -24,7 +24,7 @@
     text-align: center;
 }
 
-.title_list_card {
+.title-list-card, .sys-info-card {
     margin-bottom: 5px;
 }
 

@@ -14,6 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>com.afrunt.scimdb</groupId>
+            <artifactId>dto</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.afrunt.scimdb</groupId>
             <artifactId>spring-boot-web-dependencies</artifactId>
         </dependency>
 

@@ -35,7 +35,7 @@
                 <th:block th:replace="~{ title-fragments :: title_name(${title})}"/>
             </h5>
             <p class="card-text">
-                <th:block th:replace="~{title-fragments :: title_brief(${title})}" />
+                <th:block th:replace="~{title-fragments :: title_brief(${title})}"/>
             </p>
 
             <!--<a target="_blank" th:href="@{https://www.imdb.com/title/tt{titleId}(titleId=${title.titleId})}" class="btn btn-primary">View On IMDb</a>-->
@@ -50,6 +50,30 @@
 
 <th:block th:fragment="index">
     <th:block th:replace="~{fragments :: search_form}"/>
+</th:block>
+
+
+<th:block th:fragment="sys_info">
+    <div>
+        <th:block th:each="stat : ${stats}">
+            <th:block th:replace="~{fragments :: sys_info_block(${stat.key}, ${stat.value.asMap()})}"/>
+        </th:block>
+    </div>
+
+
+    <div th:if="${stats.Crawler.available}" class="card sys-info-card">
+        <div class="card-header">Crawler Actions</div>
+        <div class="card-body">
+            <form method="post">
+                <button type="submit" th:class="'btn btn-success ' + (${stats.Crawler.running} ? 'disabled' : '')"
+                        th:formaction="@{~/startCrawling}">Start
+                </button>
+                <button type="submit" th:class="'btn btn-danger ' + (${stats.Crawler.running} ? '' : 'disabled')"
+                        th:formaction="@{~/stopCrawling}">Stop
+                </button>
+            </form>
+        </div>
+    </div>
 </th:block>
 
 </body>

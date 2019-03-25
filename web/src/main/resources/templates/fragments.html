@@ -112,7 +112,7 @@
                   th:text="${'Page: ' + (page.page+1) + ' of ' + page.pages + ', Items: ' + page.itemsCount + ', Items Per Page: ' + page.perPage  + ', Items Total: ' + page.total}"/>
         </p>
     </div>
-    <div th:if="${!page.items.isEmpty()}" th:each="title : ${page.items}" class="title_list_card">
+    <div th:if="${!page.items.isEmpty()}" th:each="title : ${page.items}" class="title-list-card">
         <div class="card ">
             <div class="card-body">
                 <h5 class="card-title">
@@ -166,6 +166,13 @@
                             </a>
                         </div>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{~/sys-info}">
+                            System Information
+                        </a>
+
+                    </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0" th:action="@{/search}" method="get">
                     <input class="form-control mr-sm-2" type="search" name="term" placeholder="Search"
@@ -183,6 +190,18 @@
     </div>
 </th:block>
 
+
+<th:block th:fragment="sys_info_block(title, values)">
+    <div class="card sys-info-card">
+        <div class="card-header" th:text="${title}" />
+
+        <div class="card-body">
+            <div th:each="value : ${values}">
+                <div th:text="${#strings.capitalize(value.key)} + ': ' + ${value.value}"/>
+            </div>
+        </div>
+    </div>
+</th:block>
 
 </body>
 </html>

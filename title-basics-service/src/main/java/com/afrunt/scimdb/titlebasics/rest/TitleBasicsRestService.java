@@ -2,9 +2,12 @@ package com.afrunt.scimdb.titlebasics.rest;
 
 import com.afrunt.imdb.model.TitleBasics;
 import com.afrunt.scimdb.dto.PageResponse;
-import com.afrunt.scimdb.dto.titlebasics.SearchRequest;
+import com.afrunt.scimdb.dto.titlebasics.TitleBasicsSearchRequest;
+import com.afrunt.scimdb.dto.titlebasics.TitleBasicsStatistics;
 import com.afrunt.scimdb.titlebasics.TitleNotFoundException;
 import com.afrunt.scimdb.titlebasics.service.TitleBasicsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,6 +28,8 @@ import static java.util.Map.entry;
 @RestController
 public class TitleBasicsRestService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TitleBasicsRestService.class);
+
     @Autowired
     private TitleBasicsService titleBasicsService;
 
@@ -35,19 +40,19 @@ public class TitleBasicsRestService {
     }
 
     @GetMapping(value = "/stats", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> stats() {
+    public ResponseEntity<TitleBasicsStatistics> stats() {
         StopWatch sw = new StopWatch();
         sw.start();
-        long countGenres = titleBasicsService.allGenresCount();
-        long count = titleBasicsService.count();
+        long countOfTitles = titleBasicsService.count();
+        long countOfGenres = titleBasicsService.allGenresCount();
         sw.stop();
 
+        LOGGER.info("Title Basics statistics collected in {}ms", sw.getTotalTimeMillis());
 
-        return ResponseEntity.ok(Map.ofEntries(
-                entry("titles", count),
-                entry("genres", countGenres),
-                entry("took", sw.getTotalTimeMillis())
-        ));
+        return ResponseEntity.ok(new TitleBasicsStatistics()
+                .setTitles(countOfTitles)
+                .setGenres(countOfGenres)
+        );
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,9 +78,9 @@ public class TitleBasicsRestService {
     }
 
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PageResponse<TitleBasics>> search(@RequestBody SearchRequest searchRequest) {
+    public ResponseEntity<PageResponse<TitleBasics>> search(@RequestBody TitleBasicsSearchRequest titleBasicsSearchRequest) {
 
-        Page<TitleBasics> page = titleBasicsService.search(searchRequest);
+        Page<TitleBasics> page = titleBasicsService.search(titleBasicsSearchRequest);
 
         return ResponseEntity.ok(new PageResponse<TitleBasics>()
                 .setPage(page.getNumber())

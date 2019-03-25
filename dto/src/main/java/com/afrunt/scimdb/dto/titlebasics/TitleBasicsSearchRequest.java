@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Andrii Frunt
  */
-public class SearchRequest implements Serializable {
+public class TitleBasicsSearchRequest implements Serializable {
     private String term;
     private int page = 0;
     private int perPage = 20;
@@ -18,7 +18,7 @@ public class SearchRequest implements Serializable {
         return term;
     }
 
-    public SearchRequest setTerm(String term) {
+    public TitleBasicsSearchRequest setTerm(String term) {
         this.term = term;
         return this;
     }
@@ -27,7 +27,7 @@ public class SearchRequest implements Serializable {
         return page;
     }
 
-    public SearchRequest setPage(int page) {
+    public TitleBasicsSearchRequest setPage(int page) {
         this.page = page;
         return this;
     }
@@ -36,7 +36,7 @@ public class SearchRequest implements Serializable {
         return perPage;
     }
 
-    public SearchRequest setPerPage(int perPage) {
+    public TitleBasicsSearchRequest setPerPage(int perPage) {
         this.perPage = perPage;
         return this;
     }
@@ -45,7 +45,7 @@ public class SearchRequest implements Serializable {
         return genres;
     }
 
-    public SearchRequest setGenres(List<String> genres) {
+    public TitleBasicsSearchRequest setGenres(List<String> genres) {
         this.genres = genres;
         return this;
     }
@@ -61,7 +61,7 @@ public class SearchRequest implements Serializable {
         return startYear;
     }
 
-    public SearchRequest setStartYear(Integer startYear) {
+    public TitleBasicsSearchRequest setStartYear(Integer startYear) {
         this.startYear = startYear;
         return this;
     }

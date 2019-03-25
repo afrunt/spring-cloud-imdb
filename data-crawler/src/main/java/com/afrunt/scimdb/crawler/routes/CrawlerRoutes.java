@@ -90,6 +90,9 @@ public class CrawlerRoutes extends RouteBuilder {
                 .log("Title Basics Batch sent ${body.size()}")
                 .bean(titleBasicsServiceClient, "createTitlesBasics")
                 .log("Title Basics Batch processed \n${body.getBody()}");
+
+        from("direct:isRunning")
+                .setBody(() -> !crawlingStopped);
     }
 
     // @formatter:on
