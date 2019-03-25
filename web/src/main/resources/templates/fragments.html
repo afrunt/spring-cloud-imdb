@@ -23,12 +23,12 @@
 
 <th:block th:fragment="genre_option(value)">
     <th:block
-            th:if="${value == #httpServletRequest.getParameter('genre') || (value == 'Any' && #httpServletRequest.getParameter('genre') == null)}">
+            th:if="${value == #httpServletRequest.getParameter('genre')}">
         <option th:value="${value}" th:text="${value}" selected/>
     </th:block>
 
     <th:block
-            th:if="${value != #httpServletRequest.getParameter('genre') && #httpServletRequest.getParameter('genre') != null}">
+            th:if="${value != #httpServletRequest.getParameter('genre')}">
         <option th:value="${value}" th:text="${value}"/>
     </th:block>
 </th:block>
@@ -154,7 +154,7 @@
                     <img th:src="@{/images/imdb.png}" width="65" alt="">
                 </a>
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" th:if="${genresWithTitles.size() > 0}">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                            aria-haspopup="true"
                            aria-expanded="false">Genres</a>
@@ -193,7 +193,7 @@
 
 <th:block th:fragment="sys_info_block(title, values)">
     <div class="card sys-info-card">
-        <div class="card-header" th:text="${title}" />
+        <div class="card-header" th:text="#{'sysInfo.' + ${title}}"/>
 
         <div class="card-body">
             <div th:each="value : ${values}">

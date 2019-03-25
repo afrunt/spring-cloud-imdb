@@ -61,27 +61,27 @@
     </div>
 
 
-    <div th:if="${stats.sysInfoCrawler.available}" class="card sys-info-card">
+    <div th:if="${stats.crawler.available}" class="card sys-info-card">
         <div class="card-header">Crawler Actions</div>
         <div class="card-body">
             <form method="post">
                 <button type="submit"
-                        th:class="'btn btn-success ' + (${stats.sysInfoCrawler.running} ? 'disabled' : '')"
+                        th:class="'btn btn-success ' + (${stats.crawler.running} ? 'disabled' : '')"
                         th:formaction="@{~/startCrawling}">Start
                 </button>
-                <button type="submit" th:class="'btn btn-danger ' + (${stats.sysInfoCrawler.running} ? '' : 'disabled')"
+                <button type="submit" th:class="'btn btn-danger ' + (${stats.crawler.running} ? '' : 'disabled')"
                         th:formaction="@{~/stopCrawling}">Stop
                 </button>
             </form>
         </div>
     </div>
 
-    <div th:if="${stats.sysInfoTitleBasics.available}" class="card sys-info-card">
+    <div th:if="${stats.titleBasics.available}" class="card sys-info-card">
         <div class="card-header">Title Basics Actions</div>
         <div class="card-body">
             <form method="post">
 
-                <button type="submit" th:class="'btn btn-danger ' + (${stats.sysInfoTitleBasics.titles == 0} ? 'disabled' : '')"
+                <button type="submit" th:class="'btn btn-danger ' + (${stats.titleBasics.titles == 0} ? 'disabled' : '')"
                         th:formaction="@{~/deleteTitleBasics}">Delete All
                 </button>
             </form>

@@ -159,5 +159,8 @@ public class TitleBasicsService {
     public void deleteAll() {
         elasticsearchTemplate.deleteIndex("title-basics");
         elasticsearchTemplate.createIndex("title-basics");
+
+        TitleBasicsES saved = titleBasicsESRepository.save(new TitleBasicsES().setTitleId(0L).setGenres(Arrays.asList("temp-genre-1", "temp-genre-2")));
+        titleBasicsESRepository.delete(saved);
     }
 }

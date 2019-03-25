@@ -127,8 +127,8 @@ public class WebController {
     public String systemInformation(Model model) {
         model.addAttribute("stats",
                 Map.ofEntries(
-                        entry("sysInfoTitleBasics", Objects.requireNonNull(titleBasicsServiceClient.stats().getBody())),
-                        entry("sysInfoCrawler", Objects.requireNonNull(crawlerServiceClient.stats().getBody()))
+                        entry("titleBasics", Objects.requireNonNull(titleBasicsServiceClient.stats().getBody())),
+                        entry("crawler", Objects.requireNonNull(crawlerServiceClient.stats().getBody()))
                 )
         );
 
