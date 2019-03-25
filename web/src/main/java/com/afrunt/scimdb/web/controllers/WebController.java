@@ -117,12 +117,18 @@ public class WebController {
         return "redirect:/sys-info";
     }
 
+    @PostMapping("/deleteTitleBasics")
+    public String deleteTitleBasics() {
+        titleBasicsServiceClient.deleteAll();
+        return "redirect:/sys-info";
+    }
+
     @GetMapping("/sys-info")
     public String systemInformation(Model model) {
         model.addAttribute("stats",
                 Map.ofEntries(
-                        entry("Title Basics", Objects.requireNonNull(titleBasicsServiceClient.stats().getBody())),
-                        entry("Crawler", Objects.requireNonNull(crawlerServiceClient.stats().getBody()))
+                        entry("sysInfoTitleBasics", Objects.requireNonNull(titleBasicsServiceClient.stats().getBody())),
+                        entry("sysInfoCrawler", Objects.requireNonNull(crawlerServiceClient.stats().getBody()))
                 )
         );
 

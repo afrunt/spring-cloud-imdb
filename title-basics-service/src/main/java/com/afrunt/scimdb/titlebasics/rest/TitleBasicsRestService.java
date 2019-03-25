@@ -101,6 +101,12 @@ public class TitleBasicsRestService {
         return ResponseEntity.ok(titleBasicsService.allGenres());
     }
 
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Boolean> deleteAll() {
+        titleBasicsService.deleteAll();
+        return ResponseEntity.ok(true);
+    }
+
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = TitleNotFoundException.class)
     public Map<String, Object> titleNotFoundExceptionHandler(TitleNotFoundException e) {

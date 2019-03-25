@@ -28,7 +28,7 @@
     </th:block>
 
     <th:block
-            th:if="${value != #httpServletRequest.getParameter('genre')}">
+            th:if="${value != #httpServletRequest.getParameter('genre') && #httpServletRequest.getParameter('genre') != null}">
         <option th:value="${value}" th:text="${value}"/>
     </th:block>
 </th:block>

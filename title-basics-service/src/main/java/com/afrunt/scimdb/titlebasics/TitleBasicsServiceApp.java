@@ -6,6 +6,8 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -17,6 +19,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableAsync
 @SpringBootApplication
+@EnableHystrix
+@EnableCircuitBreaker
 @EnableElasticsearchRepositories(basePackages = "com.afrunt.scimdb.titlebasics.repository")
 public class TitleBasicsServiceApp {
     public static void main(String[] args) {

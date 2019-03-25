@@ -4,6 +4,7 @@ import com.afrunt.imdb.model.TitleBasics;
 import com.afrunt.scimdb.dto.titlebasics.TitleBasicsSearchRequest;
 import com.afrunt.scimdb.titlebasics.model.TitleBasicsES;
 import com.afrunt.scimdb.titlebasics.repository.TitleBasicsESRepository;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import ma.glasnost.orika.MapperFacade;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -156,6 +157,7 @@ public class TitleBasicsService {
     }
 
     public void deleteAll() {
-        titleBasicsESRepository.deleteAll();
+        elasticsearchTemplate.deleteIndex("title-basics");
+        elasticsearchTemplate.createIndex("title-basics");
     }
 }
