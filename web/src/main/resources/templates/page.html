@@ -64,7 +64,14 @@
         <div class="card-header">Discovered Services</div>
         <div class="card-body">
             <div th:each="service : ${services}">
-                <div th:text="${service.key} + ': ' + ${service.value}"/>
+                <div th:text="${service.key} + ': '" />
+                <div>
+                    <ul>
+                        <li th:each="instance : ${service.value}">
+                            <th:block th:text="| InstanceId: ${instance.instanceId} Host: ${instance.host} Port: ${instance.port}|" />
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

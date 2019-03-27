@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: crawler-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: crawler-service
+  ports:
+    - port: 8585
+      targetPort: 8585
+

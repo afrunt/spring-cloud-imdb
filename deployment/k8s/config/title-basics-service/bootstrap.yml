@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: "title-basics-service"
+  elasticsearch:
+    rest:
+      uris: "elasticsearch:9200"
+
+  data:
+    elasticsearch:
+      cluster-nodes: "elasticsearch:9300"
+
+  cloud:
+    kubernetes:
+      enabled: true
+
+eureka:
+  client:
+    enabled: false

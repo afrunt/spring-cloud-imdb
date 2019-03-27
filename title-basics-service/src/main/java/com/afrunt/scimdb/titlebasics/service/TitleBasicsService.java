@@ -4,8 +4,8 @@ import com.afrunt.imdb.model.TitleBasics;
 import com.afrunt.scimdb.dto.titlebasics.TitleBasicsSearchRequest;
 import com.afrunt.scimdb.titlebasics.model.TitleBasicsES;
 import com.afrunt.scimdb.titlebasics.repository.TitleBasicsESRepository;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import ma.glasnost.orika.MapperFacade;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -47,6 +48,12 @@ public class TitleBasicsService {
 
     @Autowired
     ElasticsearchTemplate elasticsearchTemplate;
+
+    @PostConstruct
+    public void init() {
+        LOGGER.info("Initializing Title Basics Service");
+        initIndex();
+    }
 
     public Page<TitleBasics> search(TitleBasicsSearchRequest titleBasicsSearchRequest) {
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
@@ -131,7 +138,7 @@ public class TitleBasicsService {
 
         Client client = elasticsearchTemplate.getClient();
 
-        SearchResponse response = client.prepareSearch("title-basics")
+        SearchRequestBuilder searchRequestBuilder = client.prepareSearch("title-basics")
                 .setTypes("TitleBasics")
                 .setQuery(QueryBuilders.matchAllQuery())
                 .setSize(0)
@@ -139,17 +146,23 @@ public class TitleBasicsService {
                         AggregationBuilders.terms("unique_genres")
                                 .field("genres.keyword")
                                 .size(100)
-                )
-                .execute()
-                .actionGet();
+                );
 
-        Map<String, Aggregation> results = response.getAggregations().asMap();
-        StringTerms uniqueGenres = (StringTerms) results.get("unique_genres");
-        Map<String, Long> genresWithCountOfTitles = uniqueGenres.getBuckets().stream().collect(Collectors.toMap(StringTerms.Bucket::getKeyAsString, InternalTerms.Bucket::getDocCount));
-        esSw.stop();
-        LOGGER.info("{} ES genres fetched in {}ms", genresWithCountOfTitles.size(), esSw.getTotalTimeMillis());
+        try {
+            SearchResponse response = searchRequestBuilder
+                    .execute()
+                    .actionGet();
 
-        return genresWithCountOfTitles;
+            Map<String, Aggregation> results = response.getAggregations().asMap();
+            StringTerms uniqueGenres = (StringTerms) results.get("unique_genres");
+            Map<String, Long> genresWithCountOfTitles = uniqueGenres.getBuckets().stream().collect(Collectors.toMap(StringTerms.Bucket::getKeyAsString, InternalTerms.Bucket::getDocCount));
+            esSw.stop();
+            LOGGER.info("{} ES genres fetched in {}ms", genresWithCountOfTitles.size(), esSw.getTotalTimeMillis());
+
+            return genresWithCountOfTitles;
+        } catch (Exception e) {
+            return Collections.emptyMap();
+        }
     }
 
     private List<TitleBasics> onlyTitlesToSave(Collection<TitleBasics> tbs) {
@@ -158,9 +171,24 @@ public class TitleBasicsService {
 
     public void deleteAll() {
         elasticsearchTemplate.deleteIndex("title-basics");
-        elasticsearchTemplate.createIndex("title-basics");
+        initIndex();
+    }
 
-        TitleBasicsES saved = titleBasicsESRepository.save(new TitleBasicsES().setTitleId(0L).setGenres(Arrays.asList("temp-genre-1", "temp-genre-2")));
-        titleBasicsESRepository.delete(saved);
+    private void initIndex() {
+        if (!elasticsearchTemplate.indexExists("title-basics")) {
+            elasticsearchTemplate.createIndex("title-basics");
+            LOGGER.info("Index title-basics created");
+        }
+
+        if (!elasticsearchTemplate.typeExists("title-basics", "TitleBasics")) {
+            TitleBasicsES saved = titleBasicsESRepository.save(
+                    new TitleBasicsES()
+                            .setTitleId(0L)
+                            .setGenres(Arrays.asList("temp-genre-1", "temp-genre-2"))
+            );
+
+            titleBasicsESRepository.delete(saved);
+            LOGGER.info("TitleBasics type created");
+        }
     }
 }

@@ -10,6 +10,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -137,9 +139,9 @@ public class WebController {
                 )
         );
 
-        Map<String, Integer> discoveredServices = discoveryClient.getServices().stream()
+        Map<String, List<ServiceInstance>> discoveredServices = discoveryClient.getServices().stream()
                 .collect(Collectors
-                        .toMap(sn -> sn, sn -> discoveryClient.getInstances(sn).size())
+                        .toMap(sn -> sn, sn -> discoveryClient.getInstances(sn))
                 );
 
         model.addAttribute("services", discoveredServices);

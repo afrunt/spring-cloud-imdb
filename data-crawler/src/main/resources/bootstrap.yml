@@ -5,6 +5,9 @@ spring:
   cloud:
     kubernetes:
       enabled: false
+      client:
+        trustCerts: true
+
 
 
 eureka:

@@ -1,14 +1,21 @@
 spring:
-  data:
-    elasticsearch:
-      cluster-nodes: localhost:9300
-
   application:
     name: "title-basics-service"
 
   cloud:
     kubernetes:
       enabled: false
+      client:
+        trustCerts: true
+
+  elasticsearch:
+    rest:
+      uris: "localhost:9200"
+
+  data:
+    elasticsearch:
+      cluster-nodes: "localhost:9300"
+
 
 eureka:
   client:

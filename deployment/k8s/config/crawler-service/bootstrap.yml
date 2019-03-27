@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: "crawler-service"
+
+  cloud:
+    kubernetes:
+      enabled: true
+
+eureka:
+  client:
+    enabled: false

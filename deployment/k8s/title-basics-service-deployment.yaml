@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: title-basics-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: title-basics-service
+  template:
+    metadata:
+      labels:
+        app: title-basics-service
+    spec:
+      containers:
+        - name: title-basics-service
+          image: afrunt/spring-cloud-imdb-title-basics-service
+          ports:
+            - name: http
+              containerPort: 8181
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 2
+            httpGet:
+              port: http
+              path: /actuator/health
+          livenessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            httpGet:
+              port: http
+              path: /actuator/health
+          volumeMounts:
+            - name: "config"
+              mountPath: "/deployment/config/bootstrap.yml"
+              subPath: "bootstrap.yml"
+      volumes:
+        - name: "config"
+          configMap:
+            name: "title-basics-service-cm"
