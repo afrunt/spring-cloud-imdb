@@ -19,14 +19,16 @@ spec:
             - name: http
               containerPort: 8585
           readinessProbe:
-            initialDelaySeconds: 20
-            periodSeconds: 2
+            initialDelaySeconds: 30
+            failureThreshold: 15
+            timeoutSeconds: 5
             httpGet:
               port: http
               path: /actuator/health
           livenessProbe:
             initialDelaySeconds: 30
-            periodSeconds: 5
+            failureThreshold: 15
+            timeoutSeconds: 5
             httpGet:
               port: http
               path: /actuator/health

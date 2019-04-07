@@ -39,7 +39,6 @@ public class TitleBasicsServiceApp {
     }
 
     private MapperFactory customize(MapperFactory factory) {
-
         return factory;
     }
 }

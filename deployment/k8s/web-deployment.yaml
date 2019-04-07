@@ -15,25 +15,32 @@ spec:
       containers:
         - name: web
           image: afrunt/spring-cloud-imdb-web
+
           ports:
             - name: http
               containerPort: 8080
+
           readinessProbe:
-            initialDelaySeconds: 20
-            periodSeconds: 2
+            initialDelaySeconds: 30
+            failureThreshold: 15
+            timeoutSeconds: 5
             httpGet:
               port: http
               path: /actuator/health
+
           livenessProbe:
             initialDelaySeconds: 30
-            periodSeconds: 5
+            failureThreshold: 15
+            timeoutSeconds: 5
             httpGet:
               port: http
               path: /actuator/health
+
           volumeMounts:
             - name: "config"
               mountPath: "/deployment/config/bootstrap.yml"
               subPath: "bootstrap.yml"
+
       volumes:
         - name: "config"
           configMap:

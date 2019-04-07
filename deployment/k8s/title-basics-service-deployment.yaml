@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: title-basics-service-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: title-basics-service
@@ -19,14 +19,16 @@ spec:
             - name: http
               containerPort: 8181
           readinessProbe:
-            initialDelaySeconds: 20
-            periodSeconds: 2
+            initialDelaySeconds: 30
+            failureThreshold: 15
+            timeoutSeconds: 5
             httpGet:
               port: http
               path: /actuator/health
           livenessProbe:
-            initialDelaySeconds: 30
-            periodSeconds: 5
+            initialDelaySeconds: 40
+            failureThreshold: 15
+            timeoutSeconds: 5
             httpGet:
               port: http
               path: /actuator/health

@@ -3,7 +3,6 @@ kind: Service
 metadata:
   name: elasticsearch
 spec:
-  type: LoadBalancer
   selector:
     app: elasticsearch
   ports:
