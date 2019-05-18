@@ -17,6 +17,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -40,6 +42,9 @@ import static com.afrunt.scimdb.titlebasics.repository.TitleBasicsESRepository.*
 public class TitleBasicsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TitleBasicsService.class);
 
+    @Value("${spring.elasticsearch.rest.uris}")
+    private String elasticSearchRestUrl;
+
     @Autowired
     private MapperFacade mapperFacade;
 
@@ -47,7 +52,10 @@ public class TitleBasicsService {
     private TitleBasicsESRepository titleBasicsESRepository;
 
     @Autowired
-    ElasticsearchTemplate elasticsearchTemplate;
+    private ElasticsearchTemplate elasticsearchTemplate;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @PostConstruct
     public void init() {
@@ -60,8 +68,8 @@ public class TitleBasicsService {
 
         builder.mustNot(QueryBuilders.matchPhraseQuery("titleType", "tvEpisode"));
 
-        if (!StringUtils.isEmpty(titleBasicsSearchRequest.getTerm())) {
-            builder.must(matchSearchTerm(titleBasicsSearchRequest.getTerm()));
+        if (!StringUtils.isEmpty(titleBasicsSearchRequest.getKeywords())) {
+            builder.must(matchSearchTerm(titleBasicsSearchRequest.getKeywords()));
         }
 
         if (titleBasicsSearchRequest.hasGenres()) {
@@ -157,7 +165,7 @@ public class TitleBasicsService {
             StringTerms uniqueGenres = (StringTerms) results.get("unique_genres");
             Map<String, Long> genresWithCountOfTitles = uniqueGenres.getBuckets().stream().collect(Collectors.toMap(StringTerms.Bucket::getKeyAsString, InternalTerms.Bucket::getDocCount));
             esSw.stop();
-            LOGGER.info("{} ES genres fetched in {}ms", genresWithCountOfTitles.size(), esSw.getTotalTimeMillis());
+            LOGGER.debug("{} ES genres fetched in {}ms", genresWithCountOfTitles.size(), esSw.getTotalTimeMillis());
 
             return genresWithCountOfTitles;
         } catch (Exception e) {
@@ -172,6 +180,14 @@ public class TitleBasicsService {
     public void deleteAll() {
         elasticsearchTemplate.deleteIndex("title-basics");
         initIndex();
+
+    }
+
+    public void fixMaxResultWindow() {
+        String url = (elasticSearchRestUrl.startsWith("http") ? "" : "http://")
+                + elasticSearchRestUrl + "/_all/_settings?preserve_existing=true";
+        restTemplate
+                .put(url, Map.of("index.max_result_window", "2147483647"));
     }
 
     private void initIndex() {
@@ -179,6 +195,8 @@ public class TitleBasicsService {
             elasticsearchTemplate.createIndex("title-basics");
             LOGGER.info("Index title-basics created");
         }
+
+        fixMaxResultWindow();
 
         if (!elasticsearchTemplate.typeExists("title-basics", "TitleBasics")) {
             TitleBasicsES saved = titleBasicsESRepository.save(

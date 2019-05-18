@@ -1,4 +1,4 @@
-FROM afrunt/spring-cloud-examples-spring-boot-base
+FROM afrunt/spring-cloud-imdb-spring-boot-base
 
 ENV APP_FILE_NAME title-basics-service.jar
 

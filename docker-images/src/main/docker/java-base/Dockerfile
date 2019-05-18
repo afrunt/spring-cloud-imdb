@@ -1,2 +1,2 @@
-FROM adoptopenjdk/openjdk11-openj9
+FROM adoptopenjdk/openjdk12-openj9
 

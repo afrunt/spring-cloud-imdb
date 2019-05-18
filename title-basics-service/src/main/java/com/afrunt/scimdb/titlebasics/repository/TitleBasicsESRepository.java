@@ -17,11 +17,11 @@ public interface TitleBasicsESRepository extends ElasticsearchRepository<TitleBa
         return QueryBuilders.matchPhraseQuery("primaryTitle", searchTerm);
     }
 
-    static QueryBuilder beOfYear(Integer startYear){
+    static QueryBuilder beOfYear(Integer startYear) {
         return termQuery("startYear", startYear);
     }
 
-    static QueryBuilder beOfGenre(String genre){
+    static QueryBuilder beOfGenre(String genre) {
         return QueryBuilders.matchQuery("genres", genre);
     }
 

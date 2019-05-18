@@ -1,7 +1,15 @@
 spring:
+  cloud:
+    kubernetes:
+      enabled: false
+
   data:
     elasticsearch:
       cluster-nodes: elasticsearch:9300
+
+  elasticsearch:
+    rest:
+      uris: "elasticsearch:9200"
 
   application:
     name: "title-basics-service"

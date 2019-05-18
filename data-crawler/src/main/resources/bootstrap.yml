@@ -8,8 +8,6 @@ spring:
       client:
         trustCerts: true
 
-
-
 eureka:
   client:
     serviceUrl:

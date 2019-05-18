@@ -33,7 +33,7 @@ public class TitleBasicsRestService {
     @Autowired
     private TitleBasicsService titleBasicsService;
 
-    @GetMapping("/clear")
+    @DeleteMapping("/clear")
     public ResponseEntity<Boolean> clear() {
         titleBasicsService.deleteAll();
         return ResponseEntity.ok(true);
@@ -47,7 +47,7 @@ public class TitleBasicsRestService {
         long countOfGenres = titleBasicsService.allGenresCount();
         sw.stop();
 
-        LOGGER.info("Title Basics statistics collected in {}ms", sw.getTotalTimeMillis());
+        LOGGER.debug("Title Basics statistics collected in {}ms", sw.getTotalTimeMillis());
 
         return ResponseEntity.ok(new TitleBasicsStatistics()
                 .setTitles(countOfTitles)
@@ -93,6 +93,11 @@ public class TitleBasicsRestService {
 
     @GetMapping(value = "/genres/withTitles", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> findGenresWithTitleCount() {
+        return ResponseEntity.ok(titleBasicsService.findGenresWithCountOfTitles());
+    }
+
+    @GetMapping(value = "/genres/with-titles", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Long>> findGenresWithTitleCount2() {
         return ResponseEntity.ok(titleBasicsService.findGenresWithCountOfTitles());
     }
 

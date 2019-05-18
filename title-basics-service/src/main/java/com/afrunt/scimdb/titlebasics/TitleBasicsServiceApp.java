@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author Andrii Frunt
@@ -36,6 +37,11 @@ public class TitleBasicsServiceApp {
     @Autowired
     public MapperFacade createMapperFacade(MapperFactory mapperFactory) {
         return mapperFactory.getMapperFacade();
+    }
+
+    @Bean
+    public RestTemplate createRestTemplate(){
+        return new RestTemplate();
     }
 
     private MapperFactory customize(MapperFactory factory) {

@@ -8,18 +8,18 @@ import java.util.List;
  * @author Andrii Frunt
  */
 public class TitleBasicsSearchRequest implements Serializable {
-    private String term;
+    private String keywords;
     private int page = 0;
     private int perPage = 20;
     private Integer startYear;
     private List<String> genres = new ArrayList<>();
 
-    public String getTerm() {
-        return term;
+    public String getKeywords() {
+        return keywords;
     }
 
-    public TitleBasicsSearchRequest setTerm(String term) {
-        this.term = term;
+    public TitleBasicsSearchRequest setKeywords(String keywords) {
+        this.keywords = keywords;
         return this;
     }
 

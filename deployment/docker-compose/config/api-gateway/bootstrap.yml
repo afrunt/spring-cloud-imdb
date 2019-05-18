@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: "api-gateway"
+  cloud:
+    gateway:
+      routes:
+        - id: title-basics-service
+          uri: lb://title-basics-service
+          predicates:
+            - Path=/api/title-basics/**
+          filters:
+            - RewritePath=/api/title-basics/(?<path>.*), /$\{path}
+        - id: crawler-service
+          uri: lb://crawler-service
+          predicates:
+            - Path=/api/crawler-service/**
+          filters:
+            - RewritePath=/api/crawler-service/(?<path>.*), /$\{path}
+        - id: ui
+          uri: http://ui
+          predicates:
+            - Path=/**
+          filters:
+            - RewritePath=/(?<path>.*), /$\{path}
+      discovery:
+        locator:
+          enabled: true
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-service:8000/eureka
