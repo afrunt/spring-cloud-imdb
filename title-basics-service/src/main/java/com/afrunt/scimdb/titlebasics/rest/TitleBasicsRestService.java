@@ -1,9 +1,9 @@
 package com.afrunt.scimdb.titlebasics.rest;
 
 import com.afrunt.imdb.model.TitleBasics;
-import com.afrunt.scimdb.dto.PageResponse;
-import com.afrunt.scimdb.dto.titlebasics.TitleBasicsSearchRequest;
-import com.afrunt.scimdb.dto.titlebasics.TitleBasicsStatistics;
+import com.afrunt.scimdb.dto.PageResponseDto;
+import com.afrunt.scimdb.titlebasics.dto.TitleBasicsSearchRequest;
+import com.afrunt.scimdb.titlebasics.dto.TitleBasicsStatistics;
 import com.afrunt.scimdb.titlebasics.TitleNotFoundException;
 import com.afrunt.scimdb.titlebasics.service.TitleBasicsService;
 import org.slf4j.Logger;
@@ -78,11 +78,11 @@ public class TitleBasicsRestService {
     }
 
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PageResponse<TitleBasics>> search(@RequestBody TitleBasicsSearchRequest titleBasicsSearchRequest) {
+    public ResponseEntity<PageResponseDto<TitleBasics>> search(@RequestBody TitleBasicsSearchRequest titleBasicsSearchRequest) {
 
         Page<TitleBasics> page = titleBasicsService.search(titleBasicsSearchRequest);
 
-        return ResponseEntity.ok(new PageResponse<TitleBasics>()
+        return ResponseEntity.ok(new PageResponseDto<TitleBasics>()
                 .setPage(page.getNumber())
                 .setPerPage(page.getSize())
                 .setPages(page.getTotalPages())

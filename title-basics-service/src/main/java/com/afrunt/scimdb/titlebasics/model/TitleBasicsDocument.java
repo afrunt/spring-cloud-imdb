@@ -10,7 +10,7 @@ import java.util.List;
  * @author Andrii Frunt
  */
 @Document(indexName = "title-basics", type = "TitleBasics")
-public class TitleBasicsES implements Mappable {
+public class TitleBasicsDocument implements Mappable {
     @Id
     private Long titleId;
 
@@ -32,7 +32,7 @@ public class TitleBasicsES implements Mappable {
         return titleId;
     }
 
-    public TitleBasicsES setTitleId(Long titleId) {
+    public TitleBasicsDocument setTitleId(Long titleId) {
         this.titleId = titleId;
         return this;
     }
@@ -41,7 +41,7 @@ public class TitleBasicsES implements Mappable {
         return titleType;
     }
 
-    public TitleBasicsES setTitleType(String titleType) {
+    public TitleBasicsDocument setTitleType(String titleType) {
         this.titleType = titleType;
         return this;
     }
@@ -50,7 +50,7 @@ public class TitleBasicsES implements Mappable {
         return primaryTitle;
     }
 
-    public TitleBasicsES setPrimaryTitle(String primaryTitle) {
+    public TitleBasicsDocument setPrimaryTitle(String primaryTitle) {
         this.primaryTitle = primaryTitle;
         return this;
     }
@@ -59,7 +59,7 @@ public class TitleBasicsES implements Mappable {
         return originalTitle;
     }
 
-    public TitleBasicsES setOriginalTitle(String originalTitle) {
+    public TitleBasicsDocument setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
         return this;
     }
@@ -68,7 +68,7 @@ public class TitleBasicsES implements Mappable {
         return adult;
     }
 
-    public TitleBasicsES setAdult(boolean adult) {
+    public TitleBasicsDocument setAdult(boolean adult) {
         this.adult = adult;
         return this;
     }
@@ -77,7 +77,7 @@ public class TitleBasicsES implements Mappable {
         return startYear;
     }
 
-    public TitleBasicsES setStartYear(Integer startYear) {
+    public TitleBasicsDocument setStartYear(Integer startYear) {
         this.startYear = startYear;
         return this;
     }
@@ -86,7 +86,7 @@ public class TitleBasicsES implements Mappable {
         return endYear;
     }
 
-    public TitleBasicsES setEndYear(Integer endYear) {
+    public TitleBasicsDocument setEndYear(Integer endYear) {
         this.endYear = endYear;
         return this;
     }
@@ -95,7 +95,7 @@ public class TitleBasicsES implements Mappable {
         return runtimeMinutes;
     }
 
-    public TitleBasicsES setRuntimeMinutes(Integer runtimeMinutes) {
+    public TitleBasicsDocument setRuntimeMinutes(Integer runtimeMinutes) {
         this.runtimeMinutes = runtimeMinutes;
         return this;
     }
@@ -104,7 +104,7 @@ public class TitleBasicsES implements Mappable {
         return genres;
     }
 
-    public TitleBasicsES setGenres(List<String> genres) {
+    public TitleBasicsDocument setGenres(List<String> genres) {
         this.genres = genres;
         return this;
     }

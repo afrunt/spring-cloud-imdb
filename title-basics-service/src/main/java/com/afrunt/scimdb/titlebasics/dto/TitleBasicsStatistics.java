@@ -1,4 +1,6 @@
-package com.afrunt.scimdb.dto.titlebasics;
+package com.afrunt.scimdb.titlebasics.dto;
+
+import com.afrunt.scimdb.dto.Dto;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -8,7 +10,7 @@ import static java.util.Map.entry;
 /**
  * @author Andrii Frunt
  */
-public class TitleBasicsStatistics implements Serializable {
+public class TitleBasicsStatistics extends Dto {
     private boolean available = true;
     public long titles;
     public long genres;

@@ -1,6 +1,6 @@
 package com.afrunt.scimdb.crawler;
 
-import com.afrunt.scimdb.dto.crawler.CrawlerStatistics;
+import com.afrunt.scimdb.crawler.dto.CrawlerStatistics;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

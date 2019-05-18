@@ -1,6 +1,6 @@
 package com.afrunt.scimdb.titlebasics.repository;
 
-import com.afrunt.scimdb.titlebasics.model.TitleBasicsES;
+import com.afrunt.scimdb.titlebasics.model.TitleBasicsDocument;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
@@ -12,7 +12,7 @@ import static org.elasticsearch.index.query.QueryBuilders.termQuery;
  * @author Andrii Frunt
  */
 @Repository
-public interface TitleBasicsESRepository extends ElasticsearchRepository<TitleBasicsES, Long> {
+public interface TitleBasicsESRepository extends ElasticsearchRepository<TitleBasicsDocument, Long> {
     static QueryBuilder matchSearchTerm(String searchTerm) {
         return QueryBuilders.matchPhraseQuery("primaryTitle", searchTerm);
     }

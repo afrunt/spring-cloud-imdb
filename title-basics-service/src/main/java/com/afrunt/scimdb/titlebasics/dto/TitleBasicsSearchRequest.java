@@ -1,16 +1,15 @@
-package com.afrunt.scimdb.dto.titlebasics;
+package com.afrunt.scimdb.titlebasics.dto;
 
-import java.io.Serializable;
+import com.afrunt.scimdb.dto.PageRequestDto;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Andrii Frunt
  */
-public class TitleBasicsSearchRequest implements Serializable {
+public class TitleBasicsSearchRequest extends PageRequestDto {
     private String keywords;
-    private int page = 0;
-    private int perPage = 20;
     private Integer startYear;
     private List<String> genres = new ArrayList<>();
 
@@ -20,24 +19,6 @@ public class TitleBasicsSearchRequest implements Serializable {
 
     public TitleBasicsSearchRequest setKeywords(String keywords) {
         this.keywords = keywords;
-        return this;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public TitleBasicsSearchRequest setPage(int page) {
-        this.page = page;
-        return this;
-    }
-
-    public int getPerPage() {
-        return perPage;
-    }
-
-    public TitleBasicsSearchRequest setPerPage(int perPage) {
-        this.perPage = perPage;
         return this;
     }
 

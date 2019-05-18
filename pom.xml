@@ -29,7 +29,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <jaxb.version>2.3.0</jaxb.version>
-        <camel.version>2.23.1</camel.version>
+        <camel.version>2.24.0</camel.version>
         <docker.maven.plugin.version>0.28.0</docker.maven.plugin.version>
         <javax.activation-api.version>1.2.0</javax.activation-api.version>
         <zipkin.version>5.4.3</zipkin.version>

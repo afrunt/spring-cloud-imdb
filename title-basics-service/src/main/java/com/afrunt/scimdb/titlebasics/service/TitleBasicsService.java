@@ -1,8 +1,8 @@
 package com.afrunt.scimdb.titlebasics.service;
 
 import com.afrunt.imdb.model.TitleBasics;
-import com.afrunt.scimdb.dto.titlebasics.TitleBasicsSearchRequest;
-import com.afrunt.scimdb.titlebasics.model.TitleBasicsES;
+import com.afrunt.scimdb.titlebasics.dto.TitleBasicsSearchRequest;
+import com.afrunt.scimdb.titlebasics.model.TitleBasicsDocument;
 import com.afrunt.scimdb.titlebasics.repository.TitleBasicsESRepository;
 import ma.glasnost.orika.MapperFacade;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -91,7 +91,6 @@ public class TitleBasicsService {
     }
 
     public Optional<TitleBasics> findById(long id) {
-
         return titleBasicsESRepository.findById(id)
                 .map(tbe -> tbe.mapTo(TitleBasics.class, mapperFacade));
     }
@@ -124,8 +123,8 @@ public class TitleBasicsService {
 
         if (!titleBasicsToSave.isEmpty()) {
 
-            Iterable<TitleBasicsES> titleBasicsES = titleBasicsESRepository.saveAll(titleBasicsToSave.stream()
-                    .map(tb -> mapperFacade.map(tb, TitleBasicsES.class))
+            Iterable<TitleBasicsDocument> titleBasicsES = titleBasicsESRepository.saveAll(titleBasicsToSave.stream()
+                    .map(tb -> mapperFacade.map(tb, TitleBasicsDocument.class))
                     .collect(Collectors.toList())
             );
 
@@ -199,8 +198,8 @@ public class TitleBasicsService {
         fixMaxResultWindow();
 
         if (!elasticsearchTemplate.typeExists("title-basics", "TitleBasics")) {
-            TitleBasicsES saved = titleBasicsESRepository.save(
-                    new TitleBasicsES()
+            TitleBasicsDocument saved = titleBasicsESRepository.save(
+                    new TitleBasicsDocument()
                             .setTitleId(0L)
                             .setGenres(Arrays.asList("temp-genre-1", "temp-genre-2"))
             );

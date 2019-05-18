@@ -1,4 +1,4 @@
-package com.afrunt.scimdb.dto.crawler;
+package com.afrunt.scimdb.crawler.dto;
 
 import java.io.Serializable;
 import java.util.Map;
