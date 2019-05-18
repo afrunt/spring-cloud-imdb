@@ -2,7 +2,6 @@ package com.afrunt.scimdb.titlebasics.dto;
 
 import com.afrunt.scimdb.dto.Dto;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import static java.util.Map.entry;
@@ -11,9 +10,9 @@ import static java.util.Map.entry;
  * @author Andrii Frunt
  */
 public class TitleBasicsStatistics extends Dto {
-    private boolean available = true;
     public long titles;
     public long genres;
+    private boolean available = true;
 
     public boolean isAvailable() {
         return available;

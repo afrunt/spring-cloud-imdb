@@ -1,15 +1,14 @@
 package com.afrunt.scimdb.titlebasics.rest;
 
 import com.afrunt.imdb.model.TitleBasics;
-import com.afrunt.scimdb.dto.PageResponseDto;
+import com.afrunt.scimdb.dto.PageResponse;
 import com.afrunt.scimdb.titlebasics.TitleNotFoundException;
 import com.afrunt.scimdb.titlebasics.dto.TitleBasicsSearchRequest;
 import com.afrunt.scimdb.titlebasics.dto.TitleBasicsStatistics;
-import com.afrunt.scimdb.titlebasics.service.TitleBasicsService;
+import com.afrunt.scimdb.titlebasics.service.api.TitleBasicsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +30,11 @@ public class TitleBasicsRestService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TitleBasicsRestService.class);
 
     @Autowired
-    private TitleBasicsService titleBasicsService;
+    private TitleBasicsService titleBasicsServiceES;
 
     @DeleteMapping("/clear")
     public ResponseEntity<Boolean> clear() {
-        titleBasicsService.deleteAll();
+        titleBasicsServiceES.deleteAll();
         return ResponseEntity.ok(true);
     }
 
@@ -43,8 +42,8 @@ public class TitleBasicsRestService {
     public ResponseEntity<TitleBasicsStatistics> stats() {
         StopWatch sw = new StopWatch();
         sw.start();
-        long countOfTitles = titleBasicsService.count();
-        long countOfGenres = titleBasicsService.allGenresCount();
+        long countOfTitles = titleBasicsServiceES.count();
+        long countOfGenres = titleBasicsServiceES.allGenresCount();
         sw.stop();
 
         LOGGER.debug("Title Basics statistics collected in {}ms", sw.getTotalTimeMillis());
@@ -57,7 +56,7 @@ public class TitleBasicsRestService {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TitleBasics> titleById(@PathVariable("id") Long id) {
-        return titleBasicsService
+        return titleBasicsServiceES
                 .findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -67,7 +66,7 @@ public class TitleBasicsRestService {
     public ResponseEntity<Map<String, Object>> createTitles(@RequestBody List<TitleBasics> titlesBasics) {
         StopWatch sw = new StopWatch();
         sw.start();
-        long countOfCreated = titleBasicsService.createTitlesBasics(titlesBasics).size();
+        long countOfCreated = titleBasicsServiceES.createTitlesBasics(titlesBasics).size();
         sw.stop();
         return ResponseEntity.ok(Map.ofEntries(
                 entry("success", true),
@@ -78,30 +77,21 @@ public class TitleBasicsRestService {
     }
 
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PageResponseDto<TitleBasics>> search(@RequestBody TitleBasicsSearchRequest titleBasicsSearchRequest) {
-
-        Page<TitleBasics> page = titleBasicsService.search(titleBasicsSearchRequest);
-
-        return ResponseEntity.ok(new PageResponseDto<TitleBasics>()
-                .setPage(page.getNumber())
-                .setPerPage(page.getSize())
-                .setPages(page.getTotalPages())
-                .setTotal(page.getTotalElements())
-                .setItems(page.getContent())
-        );
+    public ResponseEntity<PageResponse<TitleBasics>> search(@RequestBody TitleBasicsSearchRequest titleBasicsSearchRequest) {
+        return ResponseEntity.ok(titleBasicsServiceES.search(titleBasicsSearchRequest));
     }
 
     @GetMapping(value = "/genres/with-titles", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> findGenresWithTitleCount() {
         return ResponseEntity.ok(
-                titleBasicsService.findGenresWithCountOfTitles()
+                titleBasicsServiceES.findGenresWithCountOfTitles()
         );
     }
 
     @GetMapping(value = "/genres/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<String>> getAllGenres() {
         return ResponseEntity.ok(
-                titleBasicsService.allGenres()
+                titleBasicsServiceES.allGenres()
         );
     }
 

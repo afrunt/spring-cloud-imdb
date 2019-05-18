@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author Andrii Frunt
  */
-public class PageResponseDto<T> {
+public class PageResponse<T> {
     private int page;
     private int pages;
     private int perPage;
@@ -18,7 +18,7 @@ public class PageResponseDto<T> {
         return page;
     }
 
-    public PageResponseDto<T> setPage(int page) {
+    public PageResponse<T> setPage(int page) {
         this.page = page;
         return this;
     }
@@ -27,7 +27,7 @@ public class PageResponseDto<T> {
         return pages;
     }
 
-    public PageResponseDto<T> setPages(int pages) {
+    public PageResponse<T> setPages(int pages) {
         this.pages = pages;
         return this;
     }
@@ -36,7 +36,7 @@ public class PageResponseDto<T> {
         return perPage;
     }
 
-    public PageResponseDto<T> setPerPage(int perPage) {
+    public PageResponse<T> setPerPage(int perPage) {
         this.perPage = perPage;
         return this;
     }
@@ -45,7 +45,7 @@ public class PageResponseDto<T> {
         return total;
     }
 
-    public PageResponseDto<T> setTotal(long total) {
+    public PageResponse<T> setTotal(long total) {
         this.total = total;
         return this;
     }
@@ -54,7 +54,7 @@ public class PageResponseDto<T> {
         return items;
     }
 
-    public PageResponseDto<T> setItems(List<T> items) {
+    public PageResponse<T> setItems(List<T> items) {
         this.items = items;
         return this;
     }

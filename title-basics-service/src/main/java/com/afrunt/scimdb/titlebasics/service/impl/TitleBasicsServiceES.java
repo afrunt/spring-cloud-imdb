@@ -1,9 +1,11 @@
-package com.afrunt.scimdb.titlebasics.service;
+package com.afrunt.scimdb.titlebasics.service.impl;
 
 import com.afrunt.imdb.model.TitleBasics;
+import com.afrunt.scimdb.dto.PageResponse;
 import com.afrunt.scimdb.titlebasics.dto.TitleBasicsSearchRequest;
 import com.afrunt.scimdb.titlebasics.model.TitleBasicsDocument;
 import com.afrunt.scimdb.titlebasics.repository.TitleBasicsESRepository;
+import com.afrunt.scimdb.titlebasics.service.api.TitleBasicsService;
 import ma.glasnost.orika.MapperFacade;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -39,8 +41,8 @@ import static com.afrunt.scimdb.titlebasics.repository.TitleBasicsESRepository.*
  * @author Andrii Frunt
  */
 @Service
-public class TitleBasicsService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TitleBasicsService.class);
+public class TitleBasicsServiceES implements TitleBasicsService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TitleBasicsServiceES.class);
 
     @Value("${spring.elasticsearch.rest.uris}")
     private String elasticSearchRestUrl;
@@ -63,7 +65,8 @@ public class TitleBasicsService {
         initIndex();
     }
 
-    public Page<TitleBasics> search(TitleBasicsSearchRequest titleBasicsSearchRequest) {
+    @Override
+    public PageResponse<TitleBasics> search(TitleBasicsSearchRequest titleBasicsSearchRequest) {
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
 
         builder.mustNot(QueryBuilders.matchPhraseQuery("titleType", "tvEpisode"));
@@ -86,36 +89,48 @@ public class TitleBasicsService {
                 Sort.by(Sort.Order.desc("startYear").nullsLast())
         );
 
-        return titleBasicsESRepository.search(builder, pageRequest)
+        Page<TitleBasics> page = titleBasicsESRepository.search(builder, pageRequest)
                 .map(tbe -> tbe.mapTo(TitleBasics.class, mapperFacade));
+
+        return new PageResponse<TitleBasics>()
+                .setPage(page.getNumber())
+                .setPerPage(page.getSize())
+                .setPages(page.getTotalPages())
+                .setTotal(page.getTotalElements())
+                .setItems(page.getContent());
     }
 
+    @Override
     public Optional<TitleBasics> findById(long id) {
         return titleBasicsESRepository.findById(id)
                 .map(tbe -> tbe.mapTo(TitleBasics.class, mapperFacade));
     }
 
+    @Override
     public long count() {
         return titleBasicsESRepository.count();
     }
 
+    @Override
     public long allGenresCount() {
         return allGenres().size();
     }
 
+    @Override
     public Set<String> allGenres() {
         return findGenresWithCountOfTitles().keySet().stream()
                 .sorted()
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+    @Override
     @Transactional
     public List<TitleBasics> createTitlesBasics(Collection<TitleBasics> tbs) {
         LOGGER.info("{} Title Basics received for creation", tbs.size());
         StopWatch sw = new StopWatch();
         sw.start();
 
-        List<TitleBasics> titleBasicsToSave = onlyTitlesToSave(tbs);
+        List<TitleBasics> titleBasicsToSave = new ArrayList<>(tbs);
         StopWatch esSw = new StopWatch();
         esSw.start();
 
@@ -139,6 +154,7 @@ public class TitleBasicsService {
         return saved;
     }
 
+    @Override
     public Map<String, Long> findGenresWithCountOfTitles() {
         StopWatch esSw = new StopWatch();
         esSw.start();
@@ -172,17 +188,14 @@ public class TitleBasicsService {
         }
     }
 
-    private List<TitleBasics> onlyTitlesToSave(Collection<TitleBasics> tbs) {
-        return new ArrayList<>(tbs);
-    }
-
+    @Override
     public void deleteAll() {
         elasticsearchTemplate.deleteIndex("title-basics");
         initIndex();
 
     }
 
-    public void fixMaxResultWindow() {
+    private void fixMaxResultWindow() {
         String url = (elasticSearchRestUrl.startsWith("http") ? "" : "http://")
                 + elasticSearchRestUrl + "/_all/_settings?preserve_existing=true";
         restTemplate

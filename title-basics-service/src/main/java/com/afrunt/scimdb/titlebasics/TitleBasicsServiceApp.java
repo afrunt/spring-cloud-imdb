@@ -40,7 +40,7 @@ public class TitleBasicsServiceApp {
     }
 
     @Bean
-    public RestTemplate createRestTemplate(){
+    public RestTemplate createRestTemplate() {
         return new RestTemplate();
     }
 
