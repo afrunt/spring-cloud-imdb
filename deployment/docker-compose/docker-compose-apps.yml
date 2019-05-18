@@ -22,8 +22,6 @@ services:
     image: afrunt/spring-cloud-imdb-title-basics-service
     volumes:
       - ./config/title-basics-service:/deployment/config
-    ports:
-      - 8181:8181
     depends_on:
       - eureka-service
 
@@ -31,8 +29,6 @@ services:
     image: afrunt/spring-cloud-imdb-data-crawler
     volumes:
       - ./config/crawler-service:/deployment/config
-    ports:
-      - 8585:8585
     depends_on:
       - eureka-service
       - title-basics-service
