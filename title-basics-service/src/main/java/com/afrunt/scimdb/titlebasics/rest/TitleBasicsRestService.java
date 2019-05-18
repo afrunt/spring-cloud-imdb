@@ -2,9 +2,9 @@ package com.afrunt.scimdb.titlebasics.rest;
 
 import com.afrunt.imdb.model.TitleBasics;
 import com.afrunt.scimdb.dto.PageResponseDto;
+import com.afrunt.scimdb.titlebasics.TitleNotFoundException;
 import com.afrunt.scimdb.titlebasics.dto.TitleBasicsSearchRequest;
 import com.afrunt.scimdb.titlebasics.dto.TitleBasicsStatistics;
-import com.afrunt.scimdb.titlebasics.TitleNotFoundException;
 import com.afrunt.scimdb.titlebasics.service.TitleBasicsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,25 +91,18 @@ public class TitleBasicsRestService {
         );
     }
 
-    @GetMapping(value = "/genres/withTitles", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Long>> findGenresWithTitleCount() {
-        return ResponseEntity.ok(titleBasicsService.findGenresWithCountOfTitles());
-    }
-
     @GetMapping(value = "/genres/with-titles", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Long>> findGenresWithTitleCount2() {
-        return ResponseEntity.ok(titleBasicsService.findGenresWithCountOfTitles());
+    public ResponseEntity<Map<String, Long>> findGenresWithTitleCount() {
+        return ResponseEntity.ok(
+                titleBasicsService.findGenresWithCountOfTitles()
+        );
     }
 
     @GetMapping(value = "/genres/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<String>> getAllGenres() {
-        return ResponseEntity.ok(titleBasicsService.allGenres());
-    }
-
-    @DeleteMapping("/deleteAll")
-    public ResponseEntity<Boolean> deleteAll() {
-        titleBasicsService.deleteAll();
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok(
+                titleBasicsService.allGenres()
+        );
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
