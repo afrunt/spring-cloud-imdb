@@ -13,6 +13,7 @@ services:
     ports:
       - 8989:80
 
+
   api-gateway:
     image: afrunt/spring-cloud-imdb-api-gateway
     ports:
