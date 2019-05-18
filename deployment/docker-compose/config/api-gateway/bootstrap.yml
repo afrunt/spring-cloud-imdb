@@ -17,7 +17,7 @@ spring:
           filters:
             - RewritePath=/api/crawler-service/(?<path>.*), /$\{path}
         - id: ui
-          uri: http://ui:8989
+          uri: http://ui
           predicates:
             - Path=/**
           filters:
