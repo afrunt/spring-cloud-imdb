@@ -10,6 +10,9 @@ services:
 
   ui:
     image: afrunt/spring-cloud-imdb-ui
+    environment:
+      - NGINX_PORT=8989
+
 
   api-gateway:
     image: afrunt/spring-cloud-imdb-api-gateway
